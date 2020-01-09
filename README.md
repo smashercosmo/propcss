@@ -12,9 +12,9 @@ input:
 ```
 output:
 ```
-.pr { padding-right: 20px }
-.ml { margin-left: 40px }
-.w { width: 200px }
+.pr20 { padding-right: 20px }
+.ml40 { margin-left: 40px }
+.w200 { width: 200px }
 ```
 
 # Usage
