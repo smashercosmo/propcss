@@ -1,3 +1,64 @@
+# PropCSS
+like styled-system, but without any css-in-js burden
+
+# Motivation
+
+# How it works
+propcss webpack loader will extract atomic props from your base components, convert them to valid css and write to css file.
+
+input:
+```
+<Box pr={20} ml={40} w={200} />
+```
+output:
+```
+.pr { padding-right: 20px }
+.ml { margin-left: 40px }
+.w { width: 200px }
+```
+
+# Usage
+(NB: not yet published)
+```
+npm install propcss
+```
+
+Create your base component
+```
+import React from 'react'
+
+function Box(props: BoxProps) {
+  const { children, ...rest } = props
+  return <div {...rest}>{children}</div>
+}
+
+export { Box }
+```
+
+Add propcss/loader to your webpack config along with babel-loader
+```
+{
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          'babel-loader',
+          {
+            loader: 'propcss-loader',
+            options: {
+              path: APP_DIR,
+              filename: 'index.css', // file, where your atomic styles will be written to
+              component: 'Box', // name of your base component
+            },
+          },
+        ],
+      },
+    }
+  }
+}
+```
+
 # TODO
 + Support for simple expressions
 ```jsx
@@ -6,6 +67,12 @@
 + Support for both numeric and string values
 ```jsx
     <Box m={16} w="100vw" />
+```
++ Support for multiple base components
++ Support for both full and shorthand props
+```
+```jsx
+    <Box m={16} paddingLeft={32} />
 ```
 + Integration with tailwindcss
 + Cleaning up unused styles in dev mode? (not an issue for prod builds)
