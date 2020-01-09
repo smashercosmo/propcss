@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true
   },
+  "lib": ["dom"],
   "include": [
-    "src",
-    "types"
+    "src"
   ]
 }

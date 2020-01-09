@@ -1,0 +1,41 @@
+{
+  "env": {
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "airbnb",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "prettier/react",
+    "prettier/@typescript-eslint"
+  ],
+  "plugins": ["eslint-plugin-import-helpers"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "rules": {
+    // React specific rules
+    "react/jsx-filename-extension": "off",
+    "react/jsx-props-no-spreading": "off",
+
+    // Import rules
+    "import/prefer-default-export": "off",
+    "import/no-default-export": "error",
+    "import-helpers/order-imports": [
+      "error",
+      {
+        "newlinesBetween": "always",
+        "groups": [["module"], ["parent", "sibling", "index"]]
+      }
+    ],
+
+    // General rules
+    "func-style": ["error", "declaration"],
+
+    // Typescript
+    "@typescript-eslint/explicit-function-return-type": "off"
+  }
+}
