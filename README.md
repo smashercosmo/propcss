@@ -70,7 +70,7 @@ Add propcss/loader to your webpack config along with babel-loader
     <Box m={16} w="100vw" />
 ```
 + Support for multiple base components
-+ Support other bundlers (parsel, rollup)
++ Support other bundlers (parcel, rollup)
 + Support for both full and shorthand props
 ```
 ```jsx
