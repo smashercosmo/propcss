@@ -23,7 +23,7 @@ output:
 npm install propcss
 ```
 
-Create your base component
+Create your base component (or just set 'div' as your base component name)
 ```
 import React from 'react'
 
@@ -49,7 +49,7 @@ Add propcss/loader to your webpack config along with babel-loader
             options: {
               path: APP_DIR,
               filename: 'index.css', // file, where your atomic styles will be written to
-              component: 'Box', // name of your base component
+              component: 'Box', // name of your base component (could be just any html tag)
             },
           },
         ],
