@@ -13,7 +13,9 @@ function Root(props: RootProps) {
   return (
     <div>
       <Header>Header</Header>
-      <Box p={30}>{children}</Box>
+      <Box p={30} className="class3">
+        {children}
+      </Box>
     </div>
   )
 }

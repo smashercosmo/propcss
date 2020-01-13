@@ -2,6 +2,7 @@ import React from 'react'
 
 type BoxProps = {
   children: React.ReactNode
+  className?: string
   m?: number
   mt?: number
   mb?: number
