@@ -7,11 +7,32 @@ like styled-system, but without any css-in-js burden
 propcss webpack loader will extract atomic props from your base components, convert them to valid css and write to css file.
 
 input:
+
+**Component.js**
+```jsx
+import React from 'react'
+
+export default function Component() {
+  return (
+    <Box pr={20} ml={40} w={200} className="customClassName" />
+  )
+}
 ```
-<Box pr={20} ml={40} w={200} />
-```
+---
 output:
+
+**Component.js**
+```jsx
+import React from 'react'
+
+export default function Component() {
+  return (
+    <Box className="pr20 ml40 w200 customClassName" />
+  )
+}
 ```
+**index.css**
+```css
 .pr20 { padding-right: 20px }
 .ml40 { margin-left: 40px }
 .w200 { width: 200px }
@@ -24,7 +45,7 @@ npm install propcss
 ```
 
 Create your base component (or just set 'div' as your base component name)
-```
+```jsx
 import React from 'react'
 
 function Box(props: BoxProps) {
