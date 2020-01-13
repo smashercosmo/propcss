@@ -3,18 +3,18 @@ import React from 'react'
 type BoxProps = {
   children: React.ReactNode
   className?: string
-  m?: number
-  mt?: number
-  mb?: number
-  ml?: number
-  mr?: number
-  p?: number
-  pt?: number
-  pb?: number
-  pl?: number
-  pr?: number
-  w?: number
-  h?: number
+  m?: number | string
+  mt?: number | string
+  mb?: number | string
+  ml?: number | string
+  mr?: number | string
+  p?: number | string
+  pt?: number | string
+  pb?: number | string
+  pl?: number | string
+  pr?: number | string
+  w?: number | string
+  h?: number | string
 }
 
 function Box(props: BoxProps) {

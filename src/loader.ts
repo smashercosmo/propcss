@@ -7,6 +7,7 @@ import postcssJs from 'postcss-js'
 
 import { traverse } from './traverse'
 import { PLUGIN_NAMESPACE } from './symbols'
+import { normalizeClassName, normalizeValue } from './utils'
 
 type PropCSSLoaderContext = webpack.loader.LoaderContext & {
   _compiler: webpack.Compiler & {
@@ -32,7 +33,7 @@ const attributes: { [key: string]: string } = {
 }
 
 function createClasses(
-  propsChunks: ReadonlyArray<{ [attr: string]: Set<number> }>,
+  propsChunks: ReadonlyArray<{ [attr: string]: Set<number | string> }>,
 ) {
   const classes: {
     [className: string]: {
@@ -52,9 +53,10 @@ function createClasses(
 
         for (let lll = propValues.length, k = 0; k < lll; k += 1) {
           const propValue = propValues[k]
+          const className = `.${normalizeClassName(propName, propValue, true)}`
 
-          classes[`.${propName}${propValue}`] = {
-            [attributes[propName]]: `${propValue}px`,
+          classes[className] = {
+            [attributes[propName]]: normalizeValue(propValue),
           }
         }
       }

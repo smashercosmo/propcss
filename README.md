@@ -86,10 +86,6 @@ Add propcss/loader to your webpack config along with babel-loader
 ```jsx
     <Box m={expression ? 10 : 16} />
 ```
-+ Support for both numeric and string values
-```jsx
-    <Box m={16} w="100vw" />
-```
 + Support for multiple base components
 + Support other bundlers (parcel, rollup)
 + Support for both full and shorthand props
