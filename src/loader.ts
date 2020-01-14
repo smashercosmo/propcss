@@ -6,6 +6,7 @@ import postcss from 'postcss'
 import postcssJs from 'postcss-js'
 
 import { traverse } from './traverse'
+import { attributes } from './attributes'
 import { PLUGIN_NAMESPACE } from './symbols'
 import { normalizeClassName, normalizeValue } from './utils'
 
@@ -15,21 +16,6 @@ type PropCSSLoaderContext = webpack.loader.LoaderContext & {
       [resourcePath: string]: { [attr: string]: Set<string> }
     }
   }
-}
-
-const attributes: { [key: string]: string } = {
-  m: 'margin',
-  mt: 'margin-top',
-  mb: 'margin-bottom',
-  ml: 'margin-left',
-  mr: 'margin-right',
-  p: 'padding',
-  pt: 'padding-top',
-  pb: 'padding-bottom',
-  pl: 'padding-left',
-  pr: 'padding-right',
-  w: 'width',
-  h: 'height',
 }
 
 function createClasses(

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`transforms correctly 1`] = `
+"function Test() {
+  return <Box className={[\\"mt14 mb28 ml2% mr-14 pt100\\", ['class1', 'class2'].join(' ')].join(\\" \\")}>
+          test
+        </Box>;
+}"
+`;
