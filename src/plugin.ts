@@ -6,30 +6,30 @@ import { normalizeClassName } from './utils'
 
 type File = {
   metadata: BabelFileMetadata & {
-    [PLUGIN_NAMESPACE]?: { [attr: string]: Set<number> }
+    [PLUGIN_NAMESPACE]?: { [attr: string]: Set<string> }
   }
   set(key: any, val: any): void
   get(key: any): any
   has(key: any): boolean
 }
 
+type Options = {
+  component: string
+  attributes: { [key: string]: string }
+}
+
 type State = {
   file: File
-  opts: {
-    component: string
-    attributes: { [key: string]: string }
-  }
+  opts: Options
 }
 
 function isAttrAllowed(aliasMap: { [key: string]: string }, attr: string) {
   return Boolean(aliasMap[attr])
 }
 
-function getAttributeValue(
-  attribute: t.JSXAttribute | t.JSXSpreadAttribute | undefined,
-) {
-  if (!attribute || !t.isJSXAttribute(attribute)) {
-    return null
+function getAttributeValue(attribute: t.JSXAttribute | t.JSXSpreadAttribute) {
+  if (!t.isJSXAttribute(attribute)) {
+    return undefined
   }
 
   if (t.isStringLiteral(attribute.value)) {
@@ -45,21 +45,7 @@ function getAttributeValue(
     return attribute.value.expression
   }
 
-  return null
-}
-
-function getClassNameAttributeValue(
-  attributes: Array<t.JSXAttribute | t.JSXSpreadAttribute>,
-) {
-  const classNameAttribute = attributes.find(attribute => {
-    return (
-      t.isJSXAttribute(attribute) &&
-      t.isJSXIdentifier(attribute.name) &&
-      attribute.name.name === 'className'
-    )
-  })
-
-  return getAttributeValue(classNameAttribute)
+  return undefined
 }
 
 /**
@@ -67,49 +53,60 @@ function getClassNameAttributeValue(
  * "className={["atomicClass1 atomicClass2", originalClassNameAttributeExpression].join(' ')}"
  */
 function generateClassName(
-  attributes: Array<t.JSXAttribute | t.JSXSpreadAttribute>,
   classes: Set<string | number>,
+  classNameAttribute?: t.JSXAttribute,
 ) {
-  const classNameAttributeValue = getClassNameAttributeValue(attributes)
-
-  attributes.push(
-    t.jsxAttribute(
-      t.jsxIdentifier('className'),
-      t.jsxExpressionContainer(
-        t.callExpression(
-          t.memberExpression(
-            t.arrayExpression([
-              t.stringLiteral(Array.from(classes).join(' ')),
-              classNameAttributeValue,
-            ]),
-            t.identifier('join'),
-          ),
-          [t.stringLiteral(' ')],
+  const classNameAttributeValue = classNameAttribute
+    ? getAttributeValue(classNameAttribute)
+    : undefined
+  return t.jsxAttribute(
+    t.jsxIdentifier('className'),
+    t.jsxExpressionContainer(
+      t.callExpression(
+        t.memberExpression(
+          t.arrayExpression([
+            t.stringLiteral(Array.from(classes).join(' ')),
+            classNameAttributeValue || null,
+          ]),
+          t.identifier('join'),
         ),
+        [t.stringLiteral(' ')],
       ),
     ),
   )
 }
 
-function isAtomicAttribute(
-  attribute: t.JSXAttribute | t.JSXSpreadAttribute,
-  state: State,
+function handleStringLiteral(value: t.StringLiteral, values: Set<string>) {
+  values.add(value.value)
+}
+
+function handleNumericLiteral(value: t.NumericLiteral, values: Set<string>) {
+  values.add(String(value.value))
+}
+
+function handleUnaryExpression(
+  expression: t.UnaryExpression,
+  values: Set<string>,
 ) {
-  return (
-    t.isJSXAttribute(attribute) &&
-    t.isJSXIdentifier(attribute.name) &&
-    isAttrAllowed(state.opts.attributes, attribute.name.name)
-  )
-}
-
-function getAtomicAttributeValue(value: t.StringLiteral | t.Expression | null) {
-  if (t.isStringLiteral(value) || t.isNumericLiteral(value)) {
-    return value.value
+  if (expression.operator === '-' && t.isNumericLiteral(expression.argument)) {
+    values.add(expression.operator + String(expression.argument.value))
   }
-  return null
 }
 
-export function plugin(): PluginObj<State> {
+function handleExpressionContainer(
+  value: t.JSXExpressionContainer,
+  values: Set<string>,
+) {
+  if (t.isNumericLiteral(value.expression)) {
+    handleNumericLiteral(value.expression, values)
+  } else if (t.isUnaryExpression(value.expression)) {
+    handleUnaryExpression(value.expression, values)
+  }
+}
+
+export function plugin(api: any, options: Options): PluginObj<State> {
+  const { attributes: allowedAttributes, component: baseComponent } = options
+
   return {
     pre(file: File) {
       if (!file.has(PLUGIN_NAMESPACE)) {
@@ -121,36 +118,55 @@ export function plugin(): PluginObj<State> {
     },
     visitor: {
       JSXOpeningElement(path: NodePath<t.JSXOpeningElement>, state) {
+        let classes = new Set<string>()
+        let classNameAttribute: t.JSXAttribute | undefined
+        let nonAtomicAttributes = []
+
         if (
           t.isJSXIdentifier(path.node.name) &&
-          path.node.name.name === state.opts.component
+          path.node.name.name === baseComponent
         ) {
-          const classes = new Set<string | number>()
-          path.node.attributes.forEach(attribute => {
-            const value = getAtomicAttributeValue(getAttributeValue(attribute))
+          for (let i = 0, l = path.node.attributes.length; i < l; i += 1) {
+            const attribute = path.node.attributes[i]
             if (
               t.isJSXAttribute(attribute) &&
-              t.isJSXIdentifier(attribute.name) &&
-              isAttrAllowed(state.opts.attributes, attribute.name.name) &&
-              value
+              t.isJSXIdentifier(attribute.name)
             ) {
-              const { name } = attribute.name
+              if (attribute.name.name === 'className') {
+                classNameAttribute = attribute
+              } else if (
+                !isAttrAllowed(allowedAttributes, attribute.name.name)
+              ) {
+                nonAtomicAttributes.push(attribute)
+              } else {
+                let { name } = attribute.name
+                let values: Set<string> = new Set()
 
-              if (!state.file.get(PLUGIN_NAMESPACE)[name]) {
-                state.file.get(PLUGIN_NAMESPACE)[name] = new Set()
+                if (t.isStringLiteral(attribute.value)) {
+                  handleStringLiteral(attribute.value, values)
+                } else if (t.isJSXExpressionContainer(attribute.value)) {
+                  handleExpressionContainer(attribute.value, values)
+                }
+
+                if (!state.file.get(PLUGIN_NAMESPACE)[name]) {
+                  state.file.get(PLUGIN_NAMESPACE)[name] = new Set()
+                }
+
+                for (let value of values.values()) {
+                  classes.add(normalizeClassName(name, value, false))
+                  state.file.get(PLUGIN_NAMESPACE)[name].add(value)
+                }
               }
-
-              state.file.get(PLUGIN_NAMESPACE)[name].add(value)
-              classes.add(normalizeClassName(name, value, false))
             }
-          })
+          }
 
-          // remove all atomic attributes
-          path.node.attributes = path.node.attributes.filter(
-            attribute => !isAtomicAttribute(attribute, state),
+          path.node.attributes = nonAtomicAttributes
+
+          let newClassNameAttribute = generateClassName(
+            classes,
+            classNameAttribute,
           )
-
-          generateClassName(path.node.attributes, classes)
+          path.node.attributes.push(newClassNameAttribute)
         }
       },
     },

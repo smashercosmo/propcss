@@ -1,28 +1,26 @@
 import cssesc from 'cssesc'
 
-const NUMBER_REGEXP = /^\d+$/
+const NUMBER_REGEXP = /^-?\d+$/
 const NUMBER_PX_REGEXP = /^(\d+)px$/
 
-export function normalizeValue(value: string | number) {
-  const strValue = String(value)
-  if (strValue === '0') {
+export function normalizeValue(value: string) {
+  if (value === '0') {
     return '0'
   }
-  if (NUMBER_REGEXP.test(strValue)) {
-    return `${strValue}px`
+  if (NUMBER_REGEXP.test(value)) {
+    return `${value}px`
   }
-  return strValue
+  return value
 }
 
 export function normalizeClassName(
   name: string,
-  value: string | number,
+  value: string,
   isIdentifier: boolean,
 ) {
-  const strValue = String(value)
-  const match = strValue.match(NUMBER_PX_REGEXP)
+  const match = value.match(NUMBER_PX_REGEXP)
   if (match) {
     return name + match[1]
   }
-  return cssesc(name + strValue, { isIdentifier })
+  return cssesc(name + value, { isIdentifier })
 }

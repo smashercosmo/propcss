@@ -12,7 +12,7 @@ import { normalizeClassName, normalizeValue } from './utils'
 type PropCSSLoaderContext = webpack.loader.LoaderContext & {
   _compiler: webpack.Compiler & {
     [PLUGIN_NAMESPACE]?: {
-      [resourcePath: string]: { [attr: string]: Set<number> }
+      [resourcePath: string]: { [attr: string]: Set<string> }
     }
   }
 }
@@ -33,7 +33,7 @@ const attributes: { [key: string]: string } = {
 }
 
 function createClasses(
-  propsChunks: ReadonlyArray<{ [attr: string]: Set<number | string> }>,
+  propsChunks: ReadonlyArray<{ [attr: string]: Set<string> }>,
 ) {
   const classes: {
     [className: string]: {

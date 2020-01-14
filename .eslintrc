@@ -34,6 +34,8 @@
 
     // General rules
     "func-style": ["error", "declaration"],
+    "prefer-const": "off",
+    "no-restricted-syntax": "off",
 
     // Typescript
     "@typescript-eslint/explicit-function-return-type": "off"

@@ -15,6 +15,7 @@ function Header(props: HeaderProps) {
         mt={14}
         mb="28px"
         ml="2%"
+        mr={-14}
         pt={100}
         className={['class1', 'class2'].join(' ')}>
         d
