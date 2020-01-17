@@ -1,4 +1,4 @@
-export const attributes: { [key: string]: string } = {
+export let attributes: { [key: string]: string } = {
   m: 'margin',
   mt: 'margin-top',
   mb: 'margin-bottom',

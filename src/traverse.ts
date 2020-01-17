@@ -17,7 +17,7 @@ export function traverse(
   filename: string,
   options: { component: string; attributes: { [key: string]: string } },
 ): Result {
-  const extname = path.extname(filename);
+  let extname = path.extname(filename)
 
   // This was copied directly from
   // https://github.com/4Catalyzer/astroturf/blob/master/src/traverse.js
