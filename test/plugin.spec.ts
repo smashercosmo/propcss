@@ -1,5 +1,5 @@
-import { traverse } from '../traverse'
-import { attributes } from '../attributes'
+import { traverse } from '../src/traverse'
+import { attributes } from '../src/attributes'
 
 it('transforms correctly', () => {
   const jsx = `

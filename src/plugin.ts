@@ -56,7 +56,7 @@ function generateClassName(
   classes: Set<string | number>,
   classNameAttribute?: t.JSXAttribute,
 ) {
-  const classNameAttributeValue = classNameAttribute
+  let classNameAttributeValue = classNameAttribute
     ? getAttributeValue(classNameAttribute)
     : undefined
   return t.jsxAttribute(
@@ -104,8 +104,8 @@ function handleExpressionContainer(
   }
 }
 
-export function plugin(api: any, options: Options): PluginObj<State> {
-  const { attributes: allowedAttributes, component: baseComponent } = options
+export function plugin(_api: any, options: Options): PluginObj<State> {
+  let { attributes: allowedAttributes, component: baseComponent } = options
 
   return {
     pre(file: File) {
@@ -127,7 +127,7 @@ export function plugin(api: any, options: Options): PluginObj<State> {
           path.node.name.name === baseComponent
         ) {
           for (let i = 0, l = path.node.attributes.length; i < l; i += 1) {
-            const attribute = path.node.attributes[i]
+            let attribute = path.node.attributes[i]
             if (
               t.isJSXAttribute(attribute) &&
               t.isJSXIdentifier(attribute.name)
@@ -152,7 +152,10 @@ export function plugin(api: any, options: Options): PluginObj<State> {
                   state.file.get(PLUGIN_NAMESPACE)[name] = new Set()
                 }
 
-                for (let value of values.values()) {
+                let valuesArr = Array.from(values)
+
+                for (let ii = 0, ll = valuesArr.length; ii < ll; ii += 1) {
+                  let value = valuesArr[ii]
                   classes.add(normalizeClassName(name, value, false))
                   state.file.get(PLUGIN_NAMESPACE)[name].add(value)
                 }

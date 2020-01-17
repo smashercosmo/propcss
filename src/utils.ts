@@ -1,7 +1,7 @@
 import cssesc from 'cssesc'
 
-const NUMBER_REGEXP = /^-?\d+$/
-const NUMBER_PX_REGEXP = /^(\d+)px$/
+let NUMBER_REGEXP = /^-?\d+$/
+let NUMBER_PX_REGEXP = /^(\d+)px$/
 
 export function normalizeValue(value: string) {
   if (value === '0') {
@@ -18,7 +18,7 @@ export function normalizeClassName(
   value: string,
   isIdentifier: boolean,
 ) {
-  const match = value.match(NUMBER_PX_REGEXP)
+  let match = value.match(NUMBER_PX_REGEXP)
   if (match) {
     return name + match[1]
   }
