@@ -15,6 +15,19 @@ type BoxProps = {
   pr?: number | string
   w?: number | string
   h?: number | string
+  margin?: number | string
+  marginTop?: number | string
+  marginBottom?: number | string
+  marginLeft?: number | string
+  marginRight?: number | string
+  padding?: number | string
+  paddingTop?: number | string
+  paddingBottom?: number | string
+  paddingLeft?: number | string
+  paddingRight?: number | string
+  width?: number | string
+  height?: number | string
+  customPaddingLeftProp?: number | string
 }
 
 function Box(props: BoxProps) {

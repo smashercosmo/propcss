@@ -1,4 +1,4 @@
-export let attributes: { [key: string]: string } = {
+export let componentPropToCSSPropMapping = {
   m: 'margin',
   mt: 'margin-top',
   mb: 'margin-bottom',
@@ -11,4 +11,31 @@ export let attributes: { [key: string]: string } = {
   pr: 'padding-right',
   w: 'width',
   h: 'height',
+  margin: 'margin',
+  marginTop: 'margin-top',
+  marginBottom: 'margin-bottom',
+  marginLeft: 'margin-left',
+  marginRight: 'margin-right',
+  padding: 'padding',
+  paddingTop: 'padding-top',
+  paddingBottom: 'padding-bottom',
+  paddingLeft: 'padding-left',
+  paddingRight: 'padding-right',
+  width: 'width',
+  height: 'height',
+}
+
+export let CSSPropToClassNameMapping = {
+  margin: 'm',
+  'margin-top': 'mt',
+  'margin-bottom': 'mb',
+  'margin-left': 'ml',
+  'margin-right': 'mr',
+  padding: 'p',
+  'padding-top': 'pt',
+  'padding-bottom': 'pb',
+  'padding-left': 'pl',
+  'padding-right': 'pr',
+  width: 'w',
+  height: 'h',
 }

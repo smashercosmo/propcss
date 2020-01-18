@@ -34,6 +34,12 @@ const config: webpack.Configuration = {
               path: APP_DIR,
               filename: 'index.css',
               component: 'Box',
+              componentPropToCSSPropMapping: {
+                customPaddingLeftProp: 'padding-left',
+              },
+              CSSPropToClassNameMapping: {
+                'padding-left': 'customPaddingLeftCSSClass',
+              },
             },
           },
         ],

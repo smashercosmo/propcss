@@ -88,11 +88,6 @@ Add propcss/loader to your webpack config along with babel-loader
 ```
 + Support for multiple base components
 + Support other bundlers (parcel, rollup)
-+ Support for both full and shorthand props
-```
-```jsx
-    <Box m={16} paddingLeft={32} />
-```
 + Integration with tailwindcss
 + Cleaning up unused styles in dev mode? (not an issue for prod builds)
 + Using virtual modules instead of writing to disk

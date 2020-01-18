@@ -16,3 +16,9 @@
 .pt100 {
     padding-top: 100px
 }
+.pb200 {
+    padding-bottom: 200px
+}
+.customPaddingLeftCSSClass300 {
+    padding-left: 300px
+}

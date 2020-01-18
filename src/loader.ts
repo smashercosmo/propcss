@@ -6,9 +6,13 @@ import postcss from 'postcss'
 import postcssJs from 'postcss-js'
 
 import { traverse } from './traverse'
-import { attributes } from './attributes'
+import {
+  componentPropToCSSPropMapping as defaultComponentPropToCSSPropMapping,
+  CSSPropToClassNameMapping as defaultCSSPropToClassNameMapping,
+} from './attributes'
 import { PLUGIN_NAMESPACE } from './symbols'
 import { normalizeClassName, normalizeValue } from './utils'
+import { CommonOptions, LoaderOptions } from './types'
 
 type PropCSSLoaderContext = webpack.loader.LoaderContext & {
   _compiler: webpack.Compiler & {
@@ -20,7 +24,9 @@ type PropCSSLoaderContext = webpack.loader.LoaderContext & {
 
 function createClasses(
   propsChunks: ReadonlyArray<{ [attr: string]: Set<string> }>,
+  options: CommonOptions,
 ) {
+  let { componentPropToCSSPropMapping, CSSPropToClassNameMapping } = options
   let classes: {
     [className: string]: {
       [prop: string]: string
@@ -34,15 +40,20 @@ function createClasses(
     for (let ll = propsNames.length, j = 0; j < ll; j += 1) {
       let propName = propsNames[j]
 
-      if (attributes[propName]) {
+      if (componentPropToCSSPropMapping[propName]) {
         let propValues = Array.from(propsChunk[propName])
 
         for (let lll = propValues.length, k = 0; k < lll; k += 1) {
           let propValue = propValues[k]
-          let className = `.${normalizeClassName(propName, propValue, true)}`
+          let cssProp = componentPropToCSSPropMapping[propName]
+          let className = `.${normalizeClassName(
+            CSSPropToClassNameMapping[cssProp],
+            propValue,
+            true,
+          )}`
 
           classes[className] = {
-            [attributes[propName]]: normalizeValue(propValue),
+            [cssProp]: normalizeValue(propValue),
           }
         }
       }
@@ -57,16 +68,38 @@ function loader(
   source: string | Buffer,
 ): string | Buffer | void | undefined {
   let { _compiler: compiler } = this
-  let options = getOptions(this)
+  let options = getOptions(this) as LoaderOptions
+  let {
+    componentPropToCSSPropMapping = {},
+    CSSPropToClassNameMapping = {},
+    component,
+    filename,
+    path: filepath,
+  } = options
+
+  if (!component) {
+    this.emitError('You need to provide a name for your base component')
+  }
 
   if (!compiler[PLUGIN_NAMESPACE]) {
     compiler[PLUGIN_NAMESPACE] = {}
   }
 
   if (typeof source === 'string') {
+    let allComponentPropToCSSPropMappings = Object.assign(
+      {},
+      defaultComponentPropToCSSPropMapping,
+      componentPropToCSSPropMapping,
+    )
+    let allCSSPropToClassNameMappings = Object.assign(
+      {},
+      defaultCSSPropToClassNameMapping,
+      CSSPropToClassNameMapping,
+    )
     let result = traverse(source, this.resourcePath, {
-      component: options.component,
-      attributes,
+      component,
+      componentPropToCSSPropMapping: allComponentPropToCSSPropMappings,
+      CSSPropToClassNameMapping: allCSSPropToClassNameMappings,
     })
 
     if (
@@ -80,8 +113,11 @@ function loader(
 
       if (cache && props) {
         cache[this.resourcePath] = props
-        let classes = createClasses(Object.values(cache))
-        let file = path.join(options.path, options.filename)
+        let classes = createClasses(Object.values(cache), {
+          componentPropToCSSPropMapping: allComponentPropToCSSPropMappings,
+          CSSPropToClassNameMapping: allCSSPropToClassNameMappings,
+        })
+        let file = path.join(filepath, filename)
         let { css } = postcss().process(classes, { parser: postcssJs })
         fs.writeFileSync(file, css, 'utf-8')
         return result.code

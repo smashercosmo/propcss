@@ -3,6 +3,7 @@ import { types as t, NodePath, PluginObj, BabelFileMetadata } from '@babel/core'
 
 import { PLUGIN_NAMESPACE } from './symbols'
 import { normalizeClassName } from './utils'
+import { PluginOptions } from './types'
 
 type File = {
   metadata: BabelFileMetadata & {
@@ -13,14 +14,9 @@ type File = {
   has(key: any): boolean
 }
 
-type Options = {
-  component: string
-  attributes: { [key: string]: string }
-}
-
 type State = {
   file: File
-  opts: Options
+  opts: PluginOptions
 }
 
 function isAttrAllowed(aliasMap: { [key: string]: string }, attr: string) {
@@ -104,8 +100,12 @@ function handleExpressionContainer(
   }
 }
 
-export function plugin(_api: any, options: Options): PluginObj<State> {
-  let { attributes: allowedAttributes, component: baseComponent } = options
+export function plugin(_api: any, options: PluginOptions): PluginObj<State> {
+  let {
+    componentPropToCSSPropMapping,
+    CSSPropToClassNameMapping,
+    component: baseComponent,
+  } = options
 
   return {
     pre(file: File) {
@@ -135,11 +135,14 @@ export function plugin(_api: any, options: Options): PluginObj<State> {
               if (attribute.name.name === 'className') {
                 classNameAttribute = attribute
               } else if (
-                !isAttrAllowed(allowedAttributes, attribute.name.name)
+                !isAttrAllowed(
+                  componentPropToCSSPropMapping,
+                  attribute.name.name,
+                )
               ) {
                 nonAtomicAttributes.push(attribute)
               } else {
-                let { name } = attribute.name
+                let { name: propName } = attribute.name
                 let values: Set<string> = new Set()
 
                 if (t.isStringLiteral(attribute.value)) {
@@ -148,16 +151,23 @@ export function plugin(_api: any, options: Options): PluginObj<State> {
                   handleExpressionContainer(attribute.value, values)
                 }
 
-                if (!state.file.get(PLUGIN_NAMESPACE)[name]) {
-                  state.file.get(PLUGIN_NAMESPACE)[name] = new Set()
+                if (!state.file.get(PLUGIN_NAMESPACE)[propName]) {
+                  state.file.get(PLUGIN_NAMESPACE)[propName] = new Set()
                 }
 
                 let valuesArr = Array.from(values)
 
                 for (let ii = 0, ll = valuesArr.length; ii < ll; ii += 1) {
                   let value = valuesArr[ii]
-                  classes.add(normalizeClassName(name, value, false))
-                  state.file.get(PLUGIN_NAMESPACE)[name].add(value)
+                  let cssProp = componentPropToCSSPropMapping[propName]
+                  classes.add(
+                    normalizeClassName(
+                      CSSPropToClassNameMapping[cssProp],
+                      value,
+                      false,
+                    ),
+                  )
+                  state.file.get(PLUGIN_NAMESPACE)[propName].add(value)
                 }
               }
             }

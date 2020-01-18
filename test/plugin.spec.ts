@@ -1,5 +1,8 @@
 import { traverse } from '../src/traverse'
-import { attributes } from '../src/attributes'
+import {
+  CSSPropToClassNameMapping,
+  componentPropToCSSPropMapping,
+} from '../src/attributes'
 
 it('transforms correctly', () => {
   const jsx = `
@@ -11,6 +14,7 @@ it('transforms correctly', () => {
           ml="2%"
           mr={-14}
           pt={100}
+          paddingBottom={200}
           className={['class1', 'class2'].join(' ')}>
           test
         </Box>
@@ -18,6 +22,10 @@ it('transforms correctly', () => {
     }
   `
 
-  const result = traverse(jsx, 'test.tsx', { attributes, component: 'Box' })
+  const result = traverse(jsx, 'test.tsx', {
+    CSSPropToClassNameMapping,
+    componentPropToCSSPropMapping,
+    component: 'Box',
+  })
   expect((result || {}).code).toMatchSnapshot()
 })

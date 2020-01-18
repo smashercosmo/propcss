@@ -3,6 +3,7 @@ import { transformSync, BabelFileResult, BabelFileMetadata } from '@babel/core'
 
 import { plugin } from './plugin'
 import { PLUGIN_NAMESPACE } from './symbols'
+import { PluginOptions } from './types'
 
 type Result =
   | (Omit<BabelFileResult, 'metadata'> & {
@@ -15,7 +16,7 @@ type Result =
 export function traverse(
   source: string,
   filename: string,
-  options: { component: string; attributes: { [key: string]: string } },
+  options: PluginOptions,
 ): Result {
   let extname = path.extname(filename)
 

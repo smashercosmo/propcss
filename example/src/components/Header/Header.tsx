@@ -17,6 +17,8 @@ function Header(props: HeaderProps) {
         ml="2%"
         mr={-14}
         pt={100}
+        paddingBottom={200}
+        customPaddingLeftProp={300}
         className={['class1', 'class2'].join(' ')}>
         d
       </Box>
