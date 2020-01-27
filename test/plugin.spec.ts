@@ -8,16 +8,24 @@ it('transforms correctly', () => {
   const jsx = `
     function Test() {
       return (
-        <Box
-          mt={14}
-          mb="28px"
-          ml="2%"
-          mr={-14}
-          pt={100}
-          paddingBottom={200}
-          className={['class1', 'class2'].join(' ')}>
-          test
-        </Box>
+        <div>
+          <div
+            mt={14}
+            mb="28px"
+            ml="2%"
+            mr={-14}
+            pt={100}
+            paddingBottom={200}
+            className={['class1', 'class2'].join(' ')}>
+            should create atomic classes
+          </div>
+          <CustomComponent pt={100} paddingBottom={200} className="foo bar">
+            should create atomic classes
+          </CustomComponent>
+          <IgnoredComponent pt={100} paddingBottom={200}>
+            should not create atomic classes
+          </IgnoredComponent>  
+        </div>
       )
     }
   `
@@ -25,7 +33,7 @@ it('transforms correctly', () => {
   const result = traverse(jsx, 'test.tsx', {
     CSSPropToClassNameMapping,
     componentPropToCSSPropMapping,
-    component: 'Box',
+    components: ['div', 'CustomComponent'],
   })
   expect((result || {}).code).toMatchSnapshot()
 })

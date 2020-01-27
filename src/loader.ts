@@ -72,14 +72,10 @@ function loader(
   let {
     componentPropToCSSPropMapping = {},
     CSSPropToClassNameMapping = {},
-    component,
+    components,
     filename,
     path: filepath,
   } = options
-
-  if (!component) {
-    this.emitError('You need to provide a name for your base component')
-  }
 
   if (!compiler[PLUGIN_NAMESPACE]) {
     compiler[PLUGIN_NAMESPACE] = {}
@@ -97,7 +93,7 @@ function loader(
       CSSPropToClassNameMapping,
     )
     let result = traverse(source, this.resourcePath, {
-      component,
+      components,
       componentPropToCSSPropMapping: allComponentPropToCSSPropMappings,
       CSSPropToClassNameMapping: allCSSPropToClassNameMappings,
     })

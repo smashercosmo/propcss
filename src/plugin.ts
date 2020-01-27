@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { types as t, NodePath, PluginObj, BabelFileMetadata } from '@babel/core'
+import htmlTags from 'html-tags'
 
 import { PLUGIN_NAMESPACE } from './symbols'
 import { normalizeClassName } from './utils'
@@ -55,6 +56,11 @@ function generateClassName(
   let classNameAttributeValue = classNameAttribute
     ? getAttributeValue(classNameAttribute)
     : undefined
+
+  if (classes.size === 0) {
+    return classNameAttribute
+  }
+
   return t.jsxAttribute(
     t.jsxIdentifier('className'),
     t.jsxExpressionContainer(
@@ -104,8 +110,10 @@ export function plugin(_api: any, options: PluginOptions): PluginObj<State> {
   let {
     componentPropToCSSPropMapping,
     CSSPropToClassNameMapping,
-    component: baseComponent,
+    components,
   } = options
+
+  let allowedComponents = components ? new Set(components) : new Set(htmlTags)
 
   return {
     pre(file: File) {
@@ -124,7 +132,7 @@ export function plugin(_api: any, options: PluginOptions): PluginObj<State> {
 
         if (
           t.isJSXIdentifier(path.node.name) &&
-          path.node.name.name === baseComponent
+          allowedComponents.has(path.node.name.name)
         ) {
           for (let i = 0, l = path.node.attributes.length; i < l; i += 1) {
             let attribute = path.node.attributes[i]
@@ -179,7 +187,10 @@ export function plugin(_api: any, options: PluginOptions): PluginObj<State> {
             classes,
             classNameAttribute,
           )
-          path.node.attributes.push(newClassNameAttribute)
+
+          if (newClassNameAttribute) {
+            path.node.attributes.push(newClassNameAttribute)
+          }
         }
       },
     },

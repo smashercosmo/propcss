@@ -2,8 +2,16 @@
 
 exports[`transforms correctly 1`] = `
 "function Test() {
-  return <Box className={[\\"mt14 mb28 ml2% mr-14 pt100 pb200\\", ['class1', 'class2'].join(' ')].join(\\" \\")}>
-          test
-        </Box>;
+  return <div>
+          <div className={[\\"mt14 mb28 ml2% mr-14 pt100 pb200\\", ['class1', 'class2'].join(' ')].join(\\" \\")}>
+            should create atomic classes
+          </div>
+          <CustomComponent className={[\\"pt100 pb200\\", \\"foo bar\\"].join(\\" \\")}>
+            should create atomic classes
+          </CustomComponent>
+          <IgnoredComponent pt={100} paddingBottom={200}>
+            should not create atomic classes
+          </IgnoredComponent>  
+        </div>;
 }"
 `;

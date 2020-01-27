@@ -32,7 +32,7 @@ const config = {
             options: {
               path: APP_DIR,
               filename: 'index.css',
-              component: 'Box',
+              components: ['Box'],
               componentPropToCSSPropMapping: {
                 customPaddingLeftProp: 'padding-left',
               },
