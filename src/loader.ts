@@ -1,4 +1,3 @@
-import path from 'path'
 import fs from 'fs'
 import webpack from 'webpack'
 import { getOptions } from 'loader-utils'
@@ -73,8 +72,7 @@ function loader(
     componentPropToCSSPropMapping = {},
     CSSPropToClassNameMapping = {},
     components,
-    filename,
-    path: filepath,
+    filepath,
   } = options
 
   if (!compiler[PLUGIN_NAMESPACE]) {
@@ -113,9 +111,8 @@ function loader(
           componentPropToCSSPropMapping: allComponentPropToCSSPropMappings,
           CSSPropToClassNameMapping: allCSSPropToClassNameMappings,
         })
-        let file = path.join(filepath, filename)
         let { css } = postcss().process(classes, { parser: postcssJs })
-        fs.writeFileSync(file, css, 'utf-8')
+        fs.writeFileSync(filepath, css, 'utf-8')
         return result.code
       }
     }

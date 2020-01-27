@@ -5,8 +5,7 @@ export type CommonOptions = {
 }
 
 export type LoaderOptions = Partial<CommonOptions> & {
-  path: string
-  filename: string
+  filepath: string
 }
 
 export type PluginOptions = CommonOptions

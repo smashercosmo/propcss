@@ -30,8 +30,7 @@ const config = {
           {
             loader: 'propcss',
             options: {
-              path: APP_DIR,
-              filename: 'index.css',
+              filepath: path.resolve(APP_DIR, 'index.css'),
               components: ['Box'],
               componentPropToCSSPropMapping: {
                 customPaddingLeftProp: 'padding-left',
