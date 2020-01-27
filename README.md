@@ -39,13 +39,13 @@ export default function Component() {
 ```
 
 # Usage (NB: not yet published)
-```
+```shell script
 npm install propcss
 ```
 
 Add propcss loader to your webpack config along with babel-loader
-```
-{
+```js
+module.exports = {
   module: {
     rules: [
       {
@@ -55,14 +55,14 @@ Add propcss loader to your webpack config along with babel-loader
           {
             loader: 'propcss',
             options: {
-              filepath: path.resolve(__dirname, 'src/atomic.css'), 
+              filepath: path.resolve(__dirname, 'src/atomic.css'),
             },
           },
         ],
       },
-    }
-  }
-}
+    ],
+  },
+};
 ```
 
 ## Options
