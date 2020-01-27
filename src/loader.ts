@@ -3,6 +3,7 @@ import webpack from 'webpack'
 import { getOptions } from 'loader-utils'
 import postcss from 'postcss'
 import postcssJs from 'postcss-js'
+import cssesc from 'cssesc'
 
 import { traverse } from './traverse'
 import {
@@ -45,10 +46,9 @@ function createClasses(
         for (let lll = propValues.length, k = 0; k < lll; k += 1) {
           let propValue = propValues[k]
           let cssProp = componentPropToCSSPropMapping[propName]
-          let className = `.${normalizeClassName(
-            CSSPropToClassNameMapping[cssProp],
-            propValue,
-            true,
+          let className = `.${cssesc(
+            normalizeClassName(CSSPropToClassNameMapping[cssProp], propValue),
+            { isIdentifier: true },
           )}`
 
           classes[className] = {

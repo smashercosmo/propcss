@@ -3,10 +3,10 @@
 exports[`transforms correctly 1`] = `
 "function Test() {
   return <div>
-          <div className={[\\"mt14 mb28 ml2% mr-14 pt100 pb200\\", ['class1', 'class2'].join(' ')].join(\\" \\")}>
+          <div className={[\\"mt-14em mb-28 ml-2% mr-neg-14 pt-100 pl-0 pb-200\\", ['class1', 'class2'].join(' ')].join(\\" \\")}>
             should create atomic classes
           </div>
-          <CustomComponent className={[\\"pt100 pb200\\", \\"foo bar\\"].join(\\" \\")}>
+          <CustomComponent className={[\\"pt-100 pb-200\\", \\"foo bar\\"].join(\\" \\")}>
             should create atomic classes
           </CustomComponent>
           <IgnoredComponent pt={100} paddingBottom={200}>

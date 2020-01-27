@@ -10,11 +10,12 @@ it('transforms correctly', () => {
       return (
         <div>
           <div
-            mt={14}
+            mt="14em"
             mb="28px"
             ml="2%"
             mr={-14}
             pt={100}
+            pl="0px"
             paddingBottom={200}
             className={['class1', 'class2'].join(' ')}>
             should create atomic classes

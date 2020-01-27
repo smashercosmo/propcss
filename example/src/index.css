@@ -1,24 +1,24 @@
-.p30 {
+.p-30 {
     padding: 30px
 }
-.mt14 {
+.mt-14 {
     margin-top: 14px
 }
-.mb28 {
+.mb-28 {
     margin-bottom: 28px
 }
-.ml2\% {
+.ml-2\% {
     margin-left: 2%
 }
-.mr-14 {
+.mr-neg-14 {
     margin-right: -14px
 }
-.pt100 {
+.pt-100 {
     padding-top: 100px
 }
-.pb200 {
+.pb-200 {
     padding-bottom: 200px
 }
-.customPaddingLeftCSSClass300 {
+.customPaddingLeftCSSClass-300 {
     padding-left: 300px
 }

@@ -172,7 +172,6 @@ export function plugin(_api: any, options: PluginOptions): PluginObj<State> {
                     normalizeClassName(
                       CSSPropToClassNameMapping[cssProp],
                       value,
-                      false,
                     ),
                   )
                   state.file.get(PLUGIN_NAMESPACE)[propName].add(value)
