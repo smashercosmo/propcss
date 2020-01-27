@@ -14,7 +14,7 @@ import React from 'react'
 
 export default function Component() {
   return (
-    <Box pr={20} ml={40} w={200} className="customClassName" />
+    <div pr={20} ml={40} w={200} className="customClassName" />
   )
 }
 ```
@@ -27,36 +27,23 @@ import React from 'react'
 
 export default function Component() {
   return (
-    <Box className="pr20 ml40 w200 customClassName" />
+    <div className="pr-20 ml-40 w-200 customClassName" />
   )
 }
 ```
 **index.css**
 ```css
-.pr20 { padding-right: 20px }
-.ml40 { margin-left: 40px }
-.w200 { width: 200px }
+.pr-20 { padding-right: 20px }
+.ml-40 { margin-left: 40px }
+.w-200 { width: 200px }
 ```
 
-# Usage
-(NB: not yet published)
+# Usage (NB: not yet published)
 ```
 npm install propcss
 ```
 
-Create your base component (or just set 'div' as your base component name)
-```jsx
-import React from 'react'
-
-function Box(props: BoxProps) {
-  const { children, ...rest } = props
-  return <div {...rest}>{children}</div>
-}
-
-export { Box }
-```
-
-Add propcss/loader to your webpack config along with babel-loader
+Add propcss loader to your webpack config along with babel-loader
 ```
 {
   module: {
@@ -66,11 +53,9 @@ Add propcss/loader to your webpack config along with babel-loader
         use: [
           'babel-loader',
           {
-            loader: 'propcss-loader',
+            loader: 'propcss',
             options: {
-              path: APP_DIR,
-              filename: 'index.css', // file, where your atomic styles will be written to
-              component: 'Box', // name of your base component (could be just any html tag)
+              filepath: path.resolve(__dirname, 'src/atomic.css'), 
             },
           },
         ],
@@ -80,20 +65,138 @@ Add propcss/loader to your webpack config along with babel-loader
 }
 ```
 
-# TODO
-+ Tests
-+ Support for simple expressions
-```jsx
-    <Box m={expression ? 10 : 16} />
+## Options
+
+|                    Name                                               |            Type              | Default                                                                   | Description                                                            |
+| :-------------------------------------------------------------------: | :--------------------------: | :-----------------------------------------------------------------------: | :--------------------------------------------------------------------- |
+| **[`filepath`](#filepath)**                                           | `{string}`                   |                                                                           | Path to the file, where your atomic css classes will be written to     |
+| **[`components`](#components)**                                       | `{string[]=}`                | Array of all html tags                                                    | Which components should be processed by loader                         |
+| **[`CSSPropToClassNameMapping`](#CSSPropToClassNameMapping)**         | `{object=}`                  | https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L1  | Defines atomic classes for corresponding css properties.               |
+| **[`componentPropToCSSPropMapping`](#componentPropToCSSPropMapping)** | `{object=}`                  | https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L28 | Defines component properties for corresponding css properties.         |
+
+### `filepath`
+
+Type: `string`
+Required: `true`
+
+Path to the file, where your atomic css classes will be written to
+
+### `components`
+
+Type: `string[]`
+Required: `false`
+Default: `Array of all html tags `
+
+Defines, which components should be processed by loader.     
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          'babel-loader',
+          {
+            loader: 'propcss',
+            options: {
+              filepath: path.resolve(__dirname, 'src/atomic.css'),
+              components: ['Box', 'Text', 'div'] // only these three components will be processed by loader
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
 ```
-+ Support for multiple base components
-+ Support other bundlers (parcel, rollup)
-+ Integration with tailwindcss
-+ Cleaning up unused styles in dev mode? (not an issue for prod builds)
-+ Using virtual modules instead of writing to disk
-+ Responsive styles 
- ```jsx
-     <Box m={[16, 32, 64]} />
- ```
-+ Source maps. With current implementation source maps don't make sense, because styles from different files are aggregated and deduplicated. Maybe it makes sense to not deduplicate styles in dev mode.
-+ Better name for the package 
+
+### `CSSPropToClassNameMapping`
+
+Type: `object`
+Required: `false`
+Default: https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L1
+
+Defines atomic classes for corresponding css properties.
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          'babel-loader',
+          {
+            loader: 'propcss',
+            options: {
+              filepath: path.resolve(__dirname, 'src/atomic.css'),
+              CSSPropToClassNameMapping: {
+                'padding-left': 'customPaddingLeftCSSClass',
+              }
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+input:
+```jsx
+export default function Component() {
+  return <div pl={20} />
+}
+```
+
+output:
+```jsx
+export default function Component() {
+  return <div className="customPaddingLeftCSSClass-20" />
+}
+```
+
+### `componentPropToCSSPropMapping`
+
+Type: `object`
+Required: `false`
+Default: https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L28
+
+Defines component properties for corresponding css properties.
+
+```js
+module.exports = {
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          'babel-loader',
+          {
+            loader: 'propcss',
+            options: {
+              filepath: path.resolve(__dirname, 'src/atomic.css'),
+              componentPropToCSSPropMapping: {
+                customPaddingLeftProp: 'padding-left',
+              }
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+```
+input:
+```jsx
+export default function Component() {
+  return <div customPaddingLeftProp={20} />
+}
+```
+
+output:
+```jsx
+export default function Component() {
+  return <div className="pl-20" />
+}
+```
