@@ -1,16 +1,15 @@
-import path from 'path'
-import webpack from 'webpack'
-import appRootPath from 'app-root-path'
-import { WebpackPluginServe as Serve } from 'webpack-plugin-serve'
-import HtmlWebpackPlugin from 'html-webpack-plugin'
-import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+const path = require('path')
+const appRootPath = require('app-root-path')
+const { WebpackPluginServe: Serve } = require('webpack-plugin-serve')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const optimize = process.env.NODE_ENV === 'production'
 const ROOT_DIR = appRootPath.toString()
 const APP_DIR = path.resolve(ROOT_DIR, 'src')
 const DIST_DIR = path.resolve(ROOT_DIR, 'dist')
 
-const config: webpack.Configuration = {
+const config = {
   entry: optimize
     ? [path.resolve(APP_DIR, 'index.tsx')]
     : [path.resolve(APP_DIR, 'index.tsx'), 'webpack-plugin-serve/client'],
@@ -29,7 +28,7 @@ const config: webpack.Configuration = {
         use: [
           'babel-loader',
           {
-            loader: 'propcss-loader',
+            loader: 'propcss',
             options: {
               path: APP_DIR,
               filename: 'index.css',
@@ -55,16 +54,7 @@ const config: webpack.Configuration = {
     ],
   },
   resolve: {
-    alias: {
-      react: path.resolve(ROOT_DIR, 'node_modules/react'),
-      'react-dom': path.resolve(ROOT_DIR, 'node_modules/react-dom'),
-    },
     extensions: ['.ts', '.tsx', '.js'],
-  },
-  resolveLoader: {
-    alias: {
-      'propcss-loader': path.resolve(ROOT_DIR, '..', 'src/loader.ts'),
-    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -90,5 +80,4 @@ const config: webpack.Configuration = {
   watch: !optimize,
 }
 
-// eslint-disable-next-line import/no-default-export
-export default config
+module.exports = config

@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "cross-env TS_NODE_PROJECT=\\\"./webpack.tsconfig.json\\\" NODE_ENV=production webpack --config webpack.config.ts",
-    "start": "cross-env TS_NODE_PROJECT=\\\"./webpack.tsconfig.json\\\" NODE_ENV=development webpack --config webpack.config.ts"
+    "prestart": "relative-deps",
+    "prebuild": "relative-deps",
+    "build": "NODE_ENV=production webpack --config webpack.config.js",
+    "start": "NODE_ENV=development webpack --config webpack.config.js"
   },
   "keywords": [],
   "author": "Vladislav Shkodin",
@@ -17,23 +19,17 @@
     "@babel/preset-modules": "0.1.2",
     "@babel/preset-react": "7.8.3",
     "@babel/preset-typescript": "7.8.3",
-    "@types/app-root-path": "1.2.4",
-    "@types/html-webpack-plugin": "3.2.1",
-    "@types/mini-css-extract-plugin": "0.9.0",
     "@types/react": "16.9.17",
     "@types/react-dom": "16.9.4",
-    "@types/webpack": "4.41.2",
     "@types/webpack-env": "1.15.0",
-    "@types/webpack-plugin-serve": "0.10.0",
     "app-root-path": "3.0.0",
     "babel-loader": "8.0.6",
-    "cross-env": "6.0.3",
     "css-loader": "3.4.2",
     "html-webpack-plugin": "3.2.0",
     "mini-css-extract-plugin": "0.9.0",
+    "propcss": "0.1.0",
+    "relative-deps": "0.2.0",
     "style-loader": "1.1.3",
-    "ts-node": "8.6.2",
-    "tsconfig-paths": "3.9.0",
     "typescript": "3.7.5",
     "webpack": "4.41.5",
     "webpack-cli": "3.3.10",
@@ -42,5 +38,8 @@
   "dependencies": {
     "react": "16.12.0",
     "react-dom": "16.12.0"
+  },
+  "relativeDependencies": {
+    "propcss": "../"
   }
 }
