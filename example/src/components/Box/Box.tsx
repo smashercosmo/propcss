@@ -1,32 +1,9 @@
 import React from 'react'
+import { Props } from 'propcss/dist/types'
 
-type BoxProps = {
+type BoxProps = Props & {
   children: React.ReactNode
   className?: string
-  m?: number | string
-  mt?: number | string
-  mb?: number | string
-  ml?: number | string
-  mr?: number | string
-  p?: number | string
-  pt?: number | string
-  pb?: number | string
-  pl?: number | string
-  pr?: number | string
-  w?: number | string
-  h?: number | string
-  margin?: number | string
-  marginTop?: number | string
-  marginBottom?: number | string
-  marginLeft?: number | string
-  marginRight?: number | string
-  padding?: number | string
-  paddingTop?: number | string
-  paddingBottom?: number | string
-  paddingLeft?: number | string
-  paddingRight?: number | string
-  width?: number | string
-  height?: number | string
   customPaddingLeftProp?: number | string
 }
 
