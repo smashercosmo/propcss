@@ -67,12 +67,12 @@ Add propcss loader to your webpack config along with babel-loader
 
 ## Options
 
-|                    Name                                               |            Type              | Default                                                                   | Description                                                            |
-| :-------------------------------------------------------------------: | :--------------------------: | :-----------------------------------------------------------------------: | :--------------------------------------------------------------------- |
-| **[`filepath`](#filepath)**                                           | `{string}`                   |                                                                           | Path to the file, where your atomic css classes will be written to     |
-| **[`components`](#components)**                                       | `{string[]=}`                | Array of all html tags                                                    | Which components should be processed by loader                         |
-| **[`CSSPropToClassNameMapping`](#CSSPropToClassNameMapping)**         | `{object=}`                  | https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L1  | Defines atomic classes for corresponding css properties.               |
-| **[`componentPropToCSSPropMapping`](#componentPropToCSSPropMapping)** | `{object=}`                  | https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L28 | Defines component properties for corresponding css properties.         |
+|                    Name                                               |            Type              | Default                                                                                   | Description                                                            |
+| :-------------------------------------------------------------------: | :--------------------------: | :---------------------------------------------------------------------------------------: | :--------------------------------------------------------------------- |
+| **[`filepath`](#filepath)**                                           | `{string}`                   |                                                                                           | Path to the file, where your atomic css classes will be written to     |
+| **[`components`](#components)**                                       | `{string[]=}`                | Array of all html tags                                                                    | Which components should be processed by loader                         |
+| **[`CSSPropToClassNameMapping`](#CSSPropToClassNameMapping)**         | `{object=}`                  | [Check source](https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L1)  | Defines atomic classes for corresponding css properties.               |
+| **[`componentPropToCSSPropMapping`](#componentPropToCSSPropMapping)** | `{object=}`                  | [Check source](https://github.com/smashercosmo/propcss/blob/master/src/attributes.ts#L28) | Defines component properties for corresponding css properties.         |
 
 ### `filepath`
 
